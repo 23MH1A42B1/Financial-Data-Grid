@@ -21,20 +21,20 @@ export default function VirtualGrid({ data, setData }) {
   const totalHeight = data.length * ROW_HEIGHT;
 
   const togglePin = (column) => {
-    if (pinnedColumns.includes(column)) {
-      setPinnedColumns(pinnedColumns.filter((c) => c !== column));
-    } else {
-      setPinnedColumns([...pinnedColumns, column]);
-    }
+    setPinnedColumns((prev) =>
+      prev.includes(column)
+        ? prev.filter((c) => c !== column)
+        : [...prev, column]
+    );
   };
 
   const handleRowClick = (event, rowId) => {
     if (event.ctrlKey || event.metaKey) {
-      if (selectedRows.includes(rowId)) {
-        setSelectedRows(selectedRows.filter((id) => id !== rowId));
-      } else {
-        setSelectedRows([...selectedRows, rowId]);
-      }
+      setSelectedRows((prev) =>
+        prev.includes(rowId)
+          ? prev.filter((id) => id !== rowId)
+          : [...prev, rowId]
+      );
     } else {
       setSelectedRows([rowId]);
     }
@@ -52,49 +52,56 @@ export default function VirtualGrid({ data, setData }) {
     <>
       <div
         data-test-id="grid-scroll-container"
-        style={{
-          height: containerHeight,
-          overflow: "auto",
-          position: "relative",
-          border: "1px solid #ccc"
-        }}
+        className="grid-container"
+        style={{ height: containerHeight }}
         onScroll={(e) => setScrollTop(e.target.scrollTop)}
       >
         {/* Header */}
-        <div style={{ display: "flex", fontWeight: "bold" }}>
+        <div className="grid-header">
           <div
             data-test-id="header-id"
-            className={
+            className={`grid-cell ${
               pinnedColumns.includes("id") ? "pinned-column" : ""
-            }
+            }`}
             style={{ width: 80 }}
           >
             ID
           </div>
 
           <div
-            className={
+            className={`grid-cell ${
               pinnedColumns.includes("date") ? "pinned-column" : ""
-            }
+            }`}
             style={{ width: 200 }}
           >
             Date
           </div>
 
-          <div style={{ width: 150 }}>Merchant</div>
-          <div style={{ width: 100 }}>Amount</div>
-          <div style={{ width: 100 }}>Status</div>
+          <div className="grid-cell" style={{ width: 150 }}>
+            Merchant
+          </div>
+
+          <div className="grid-cell" style={{ width: 100 }}>
+            Amount
+          </div>
+
+          <div className="grid-cell" style={{ width: 100 }}>
+            Status
+          </div>
 
           <button
             data-test-id="pin-column-id"
             onClick={() => togglePin("id")}
+            className="pin-button"
           >
             Toggle Pin ID
           </button>
         </div>
 
+        {/* Sizer */}
         <div style={{ height: totalHeight }} />
 
+        {/* Window */}
         <div
           data-test-id="grid-row-window"
           style={{
@@ -113,38 +120,38 @@ export default function VirtualGrid({ data, setData }) {
                 key={row.id}
                 data-test-id={`virtual-row-${row.id}`}
                 data-selected={isSelected ? "true" : undefined}
+                className="grid-row"
                 onClick={(e) => handleRowClick(e, row.id)}
-                style={{
-                  height: ROW_HEIGHT,
-                  display: "flex",
-                  background: isSelected ? "#d0ebff" : "#fff"
-                }}
               >
+                {/* ID */}
                 <div
-                  className={
+                  className={`grid-cell ${
                     pinnedColumns.includes("id")
                       ? "pinned-column"
                       : ""
-                  }
+                  }`}
                   style={{ width: 80 }}
                 >
                   {row.id}
                 </div>
 
+                {/* Date */}
                 <div
-                  className={
+                  className={`grid-cell ${
                     pinnedColumns.includes("date")
                       ? "pinned-column"
                       : ""
-                  }
+                  }`}
                   style={{ width: 200 }}
                 >
                   {row.date}
                 </div>
 
+                {/* Merchant (Editable) */}
                 <div
-                  data-test-id={`cell-${index}-merchant`}
+                  className="grid-cell"
                   style={{ width: 150 }}
+                  data-test-id={`cell-${index}-merchant`}
                   onDoubleClick={() => {
                     setEditingCell(row.id);
                     setEditValue(row.merchant);
@@ -165,14 +172,22 @@ export default function VirtualGrid({ data, setData }) {
                           handleEditSave(row.id, "merchant");
                         }
                       }}
+                      className="edit-input"
                     />
                   ) : (
                     row.merchant
                   )}
                 </div>
 
-                <div style={{ width: 100 }}>{row.amount}</div>
-                <div style={{ width: 100 }}>{row.status}</div>
+                {/* Amount */}
+                <div className="grid-cell" style={{ width: 100 }}>
+                  {row.amount}
+                </div>
+
+                {/* Status */}
+                <div className="grid-cell" style={{ width: 100 }}>
+                  {row.status}
+                </div>
               </div>
             );
           })}

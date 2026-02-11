@@ -8,7 +8,7 @@ function App() {
   const [filterValue, setFilterValue] = useState("");
   const [filteredCount, setFilteredCount] = useState(0);
 
-  // Load data
+  // Load Data
   useEffect(() => {
     fetch("/transactions.json")
       .then((res) => res.json())
@@ -20,7 +20,7 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
-  // Sort by amount
+  // Sort by Amount
   const sortByAmount = () => {
     const sorted = [...data].sort((a, b) =>
       amountAsc ? a.amount - b.amount : b.amount - a.amount
@@ -60,76 +60,73 @@ function App() {
   };
 
   return (
-    <div
-      style={{
-        width: "100%",
-        padding: "20px",
-        background: "#f5f5f5",
-        minHeight: "100vh",
-        color: "#000"
-      }}
-    >
-      <h2>Million Row Financial Grid</h2>
+    <div className="app-wrapper">
+      <div className="app-container">
+        <h2>Million Row Financial Grid</h2>
 
-      {/* Sort */}
-      <div
-        data-test-id="header-amount"
-        onClick={sortByAmount}
-        style={{
-          cursor: "pointer",
-          fontWeight: "bold",
-          marginBottom: "10px"
-        }}
-      >
-        Click to Sort by Amount
-      </div>
-
-      {/* Merchant Filter */}
-      <input
-        data-test-id="filter-merchant"
-        type="text"
-        placeholder="Filter by merchant..."
-        value={filterValue}
-        onChange={(e) => setFilterValue(e.target.value)}
-        style={{ marginBottom: "10px", padding: "5px" }}
-      />
-
-      {/* Filter Count */}
-      <div data-test-id="filter-count" style={{ marginBottom: "10px" }}>
-        Showing {filteredCount} of {originalData.length} rows
-      </div>
-
-      {/* Quick Filters */}
-      <div style={{ marginBottom: "15px" }}>
-        <button
-          data-test-id="quick-filter-Completed"
-          onClick={() => quickFilterStatus("Completed")}
-          style={{ marginRight: "10px" }}
+        {/* Sort */}
+        <div
+          data-test-id="header-amount"
+          onClick={sortByAmount}
+          style={{
+            cursor: "pointer",
+            fontWeight: "bold",
+            marginBottom: "10px"
+          }}
         >
-          Show Completed
-        </button>
+          Click to Sort by Amount
+        </div>
 
-        <button
-          data-test-id="quick-filter-Pending"
-          onClick={() => quickFilterStatus("Pending")}
-          style={{ marginRight: "10px" }}
-        >
-          Show Pending
-        </button>
+        {/* Merchant Filter */}
+        <input
+          data-test-id="filter-merchant"
+          type="text"
+          placeholder="Filter by merchant..."
+          value={filterValue}
+          onChange={(e) => setFilterValue(e.target.value)}
+          style={{ marginBottom: "10px", padding: "6px" }}
+        />
 
-        <button
-          data-test-id="quick-filter-Failed"
-          onClick={() => quickFilterStatus("Failed")}
+        {/* Filter Count */}
+        <div
+          data-test-id="filter-count"
+          style={{ marginBottom: "15px" }}
         >
-          Show Failed
-        </button>
+          Showing {filteredCount} of {originalData.length} rows
+        </div>
+
+        {/* Quick Filters */}
+        <div style={{ marginBottom: "20px" }}>
+          <button
+            data-test-id="quick-filter-Completed"
+            onClick={() => quickFilterStatus("Completed")}
+            style={{ marginRight: "10px" }}
+          >
+            Show Completed
+          </button>
+
+          <button
+            data-test-id="quick-filter-Pending"
+            onClick={() => quickFilterStatus("Pending")}
+            style={{ marginRight: "10px" }}
+          >
+            Show Pending
+          </button>
+
+          <button
+            data-test-id="quick-filter-Failed"
+            onClick={() => quickFilterStatus("Failed")}
+          >
+            Show Failed
+          </button>
+        </div>
+
+        {data.length > 0 ? (
+          <VirtualGrid data={data} setData={setData} />
+        ) : (
+          <p>No matching rows</p>
+        )}
       </div>
-
-      {data.length > 0 ? (
-        <VirtualGrid data={data} setData={setData} />
-      ) : (
-        <p>No matching rows</p>
-      )}
     </div>
   );
 }
