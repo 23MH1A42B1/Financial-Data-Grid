@@ -20,7 +20,7 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
-  // Sort by Amount
+  // Sort
   const sortByAmount = () => {
     const sorted = [...data].sort((a, b) =>
       amountAsc ? a.amount - b.amount : b.amount - a.amount
@@ -29,7 +29,7 @@ function App() {
     setAmountAsc(!amountAsc);
   };
 
-  // Debounced Merchant Filter
+  // Debounced Filter
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (!filterValue) {
@@ -64,61 +64,54 @@ function App() {
       <div className="app-container">
         <h2>Million Row Financial Grid</h2>
 
-        {/* Sort */}
-        <div
-          data-test-id="header-amount"
-          onClick={sortByAmount}
-          style={{
-            cursor: "pointer",
-            fontWeight: "bold",
-            marginBottom: "10px"
-          }}
-        >
-          Click to Sort by Amount
-        </div>
+        <div className="toolbar">
 
-        {/* Merchant Filter */}
-        <input
-          data-test-id="filter-merchant"
-          type="text"
-          placeholder="Filter by merchant..."
-          value={filterValue}
-          onChange={(e) => setFilterValue(e.target.value)}
-          style={{ marginBottom: "10px", padding: "6px" }}
-        />
-
-        {/* Filter Count */}
-        <div
-          data-test-id="filter-count"
-          style={{ marginBottom: "15px" }}
-        >
-          Showing {filteredCount} of {originalData.length} rows
-        </div>
-
-        {/* Quick Filters */}
-        <div style={{ marginBottom: "20px" }}>
-          <button
-            data-test-id="quick-filter-Completed"
-            onClick={() => quickFilterStatus("Completed")}
-            style={{ marginRight: "10px" }}
+          <div
+            data-test-id="header-amount"
+            className="sort-button"
+            onClick={sortByAmount}
           >
-            Show Completed
-          </button>
+            Click to Sort by Amount
+          </div>
 
-          <button
-            data-test-id="quick-filter-Pending"
-            onClick={() => quickFilterStatus("Pending")}
-            style={{ marginRight: "10px" }}
-          >
-            Show Pending
-          </button>
+          <input
+            data-test-id="filter-merchant"
+            type="text"
+            placeholder="Filter by merchant..."
+            value={filterValue}
+            onChange={(e) => setFilterValue(e.target.value)}
+          />
 
-          <button
-            data-test-id="quick-filter-Failed"
-            onClick={() => quickFilterStatus("Failed")}
+          <div
+            data-test-id="filter-count"
+            className="filter-count"
           >
-            Show Failed
-          </button>
+            Showing {filteredCount} of {originalData.length} rows
+          </div>
+
+          <div className="quick-filters">
+            <button
+              data-test-id="quick-filter-Completed"
+              onClick={() => quickFilterStatus("Completed")}
+            >
+              Show Completed
+            </button>
+
+            <button
+              data-test-id="quick-filter-Pending"
+              onClick={() => quickFilterStatus("Pending")}
+            >
+              Show Pending
+            </button>
+
+            <button
+              data-test-id="quick-filter-Failed"
+              onClick={() => quickFilterStatus("Failed")}
+            >
+              Show Failed
+            </button>
+          </div>
+
         </div>
 
         {data.length > 0 ? (
@@ -126,6 +119,7 @@ function App() {
         ) : (
           <p>No matching rows</p>
         )}
+
       </div>
     </div>
   );
