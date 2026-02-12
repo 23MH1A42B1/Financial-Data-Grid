@@ -21,3 +21,4 @@ for (let i = 0; i < 1000000; i++) {
 fs.writeFileSync("./public/transactions.json", JSON.stringify(data));
 
 console.log("✅ Generated 1,000,000 rows");
+ 
